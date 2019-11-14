@@ -43,6 +43,10 @@ public:
 			x, 50, Gosu::Color::RED,
 			200, 100, Gosu::Color::YELLOW,
 			0.0);
+		Gosu::Graphics::draw_line(
+			x, 60, Gosu::Color::WHITE,
+			200, 100, Gosu::Color::YELLOW,
+			0.0);
 	}
 	int x = 0;
 	// Wird 60x pro Sekunde aufgerufen
