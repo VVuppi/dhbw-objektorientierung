@@ -17,7 +17,7 @@ class GameWindow : public Gosu::Window
 public:
 	Gosu::Image bild;
 	GameWindow()
-		: Window(800, 600)
+		: Window(1000, 750)
 	{
 		set_caption("Gosu Tutorial Game richtig GG");
 	}
