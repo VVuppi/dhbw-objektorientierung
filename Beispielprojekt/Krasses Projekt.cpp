@@ -30,7 +30,9 @@ public:
 	int hoehe_faust = 5;
 	int hoehe = 30;											//Höhe Char
 	int y_1 = 780;											//Startwert Höhe linker Char
+	int y_1_faust = 810;
 	int y_2 = 780;											//Startwert Höhe rechter Char
+	int y_2_faust = 810;
 	
 	// wird bis zu 60x pro Sekunde aufgerufen.
 	// Wenn die Grafikkarte oder der Prozessor nicht mehr hinterherkommen,
@@ -44,7 +46,7 @@ public:
 			x_1, y_1, breite, hoehe, Gosu::Color::RED, 0.0			//dummy linker Char
 		);
 		Gosu::Graphics::draw_rect(
-			x_1_faust+breite-breite_faust, 800, breite_faust, hoehe_faust, Gosu::Color::FUCHSIA, 0.0			//Faust linker Char
+			x_1_faust+breite-breite_faust, y_1_faust, breite_faust, hoehe_faust, Gosu::Color::RED, 0.0			//Faust linker Char
 		);
 		Gosu::Graphics::draw_rect(
 			x_2, 810, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
@@ -53,7 +55,7 @@ public:
 			x_2, y_2, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
 		);
 		Gosu::Graphics::draw_rect(
-			x_2_faust, 800, breite_faust, hoehe_faust, Gosu::Color::CYAN, 0.0			//Faust rechter Char
+			x_2_faust, y_2_faust, breite_faust, hoehe_faust, Gosu::Color::BLUE, 0.0			//Faust rechter Char
 		);
 	}
 	
@@ -72,11 +74,13 @@ public:
 		}
 		if (input().down(Gosu::KB_S)) {								//Ducklogik linker Char
 			y_1 = 810;
+			y_2_faust = 810;
 		}
 		else {
 			y_1 = 780;
+			y_1_faust = 800;
 		}
-		if (input().down(Gosu::KB_W)) {								//Schlaglogik linker Char
+		if (input().down(Gosu::KB_W) && ~input().down(Gosu::KB_S)) {								//Schlaglogik linker Char
 			x_1_faust = x_1+20;
 		}
 		else {
@@ -97,11 +101,13 @@ public:
 		}
 		if (input().down(Gosu::KB_DOWN)) {							//Ducklogik rechter Char
 			y_2 = 810;
+			y_2_faust = 810;
 		}
 		else {
 			y_2 = 780;
+			y_2_faust = 800;
 		}
-		if (input().down(Gosu::KB_UP)) {								//Schlaglogik linker Char
+		if (input().down(Gosu::KB_UP)&&~input().down(Gosu::KB_DOWN)) {								//Schlaglogik linker Char
 			x_2_faust = x_2 -20;
 		}
 		else {
