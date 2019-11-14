@@ -27,11 +27,16 @@ public:
 	// dann werden `draw` Aufrufe ausgelassen und die Framerate sinkt
 	void draw() override
 	{
+		Gosu::Graphics::draw_line(
+			x, 20, Gosu::Color::RED,
+			200, 100, Gosu::Color::GREEN,
+			0.0);
 	}
-
+	int x = 0;
 	// Wird 60x pro Sekunde aufgerufen
 	void update() override
 	{
+		x = (x + 1) % 300;
 	}
 };
 
