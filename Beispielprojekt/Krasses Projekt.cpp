@@ -21,12 +21,16 @@ public:
 	{
 		set_caption("Gosu Tutorial Game richtig GG");
 	}
-	int x_1=640;											//Startwert linker Char
-	int x_2=1280;											//Startwert rechter Char
+	int x_1=640;											//Startwert Fortbewegung linker Char
+	int x_1_faust = 640;
+	int x_2=1280;											//Startwert Fortbewegung rechter Char
+	int x_2_faust = 1280;
 	int breite=30;											//breite Char
-	int hoehe = 30;
-	int y_1 = 780;
-	int y_2 = 780;
+	int breite_faust=20;
+	int hoehe_faust = 5;
+	int hoehe = 30;											//Höhe Char
+	int y_1 = 780;											//Startwert Höhe linker Char
+	int y_2 = 780;											//Startwert Höhe rechter Char
 	
 	// wird bis zu 60x pro Sekunde aufgerufen.
 	// Wenn die Grafikkarte oder der Prozessor nicht mehr hinterherkommen,
@@ -40,17 +44,23 @@ public:
 			x_1, y_1, breite, hoehe, Gosu::Color::RED, 0.0			//dummy linker Char
 		);
 		Gosu::Graphics::draw_rect(
-			x_2, 810, breite, hoehe, Gosu::Color::BLUE, 0.0		//dummy rechter Char
+			x_1_faust+breite-breite_faust, 800, breite_faust, hoehe_faust, Gosu::Color::FUCHSIA, 0.0			//Faust linker Char
 		);
 		Gosu::Graphics::draw_rect(
-			x_2, y_2, breite, hoehe, Gosu::Color::BLUE, 0.0		//dummy rechter Char
+			x_2, 810, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
+		);
+		Gosu::Graphics::draw_rect(
+			x_2, y_2, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
+		);
+		Gosu::Graphics::draw_rect(
+			x_2_faust, 800, breite_faust, hoehe_faust, Gosu::Color::CYAN, 0.0			//Faust rechter Char
 		);
 	}
 	
 	// Wird 60x pro Sekunde aufgerufen
 	void update() override
 	{
-		if (x_1 < 1860 && x_1<x_2-breite) {						//Bewegungslogik linker Char
+		if (x_1 < 1860 && x_1<x_2-breite-5) {						//Bewegungslogik linker Char
 			if (input().down(Gosu::KB_D)) {
 				x_1 = x_1 + 5;
 			}
@@ -60,32 +70,43 @@ public:
 				x_1 = x_1 - 5;
 			}
 		}
-		if (input().down(Gosu::KB_S)) {							//Ducklogik linker Char
+		if (input().down(Gosu::KB_S)) {								//Ducklogik linker Char
 			y_1 = 810;
 		}
 		else {
 			y_1 = 780;
 		}
+		if (input().down(Gosu::KB_W)) {								//Schlaglogik linker Char
+			x_1_faust = x_1+20;
+		}
+		else {
+			x_1_faust = x_1;
+		}
 
 
 
-		if (x_2 < 1860) {										//Bewegungslogik rechter Char
+		if (x_2 < 1860) {											//Bewegungslogik rechter Char
 			if (input().down(Gosu::KB_RIGHT)) {
 				x_2 = x_2 + 5;
 			}
 		}
-		if (x_2 > 30 && x_2>x_1+breite) {
+		if (x_2 > 30 && x_2>x_1+breite+5) {
 			if (input().down(Gosu::KB_LEFT)) {
 				x_2 = x_2 - 5;
 			}
 		}
-		if (input().down(Gosu::KB_DOWN)) {						//Ducklogik rechter Char
+		if (input().down(Gosu::KB_DOWN)) {							//Ducklogik rechter Char
 			y_2 = 810;
 		}
 		else {
 			y_2 = 780;
 		}
-
+		if (input().down(Gosu::KB_UP)) {								//Schlaglogik linker Char
+			x_2_faust = x_2 -20;
+		}
+		else {
+			x_2_faust = x_2;
+		}
 	}
 };
 
