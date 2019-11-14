@@ -28,7 +28,7 @@ public:
 	void draw() override
 	{
 		Gosu::Graphics::draw_line(
-			x, 20, Gosu::Color::RED,
+			x, 20, Gosu::Color::GREEN,
 			200, 100, Gosu::Color::GREEN,
 			0.0);
 		Gosu::Graphics::draw_line(
