@@ -33,6 +33,8 @@ public:
 	int y_1_faust = 810;
 	int y_2 = 780;											//Startwert Höhe rechter Char
 	int y_2_faust = 810;
+	int leben_li = 3;
+	int leben_re = 3;
 	
 	// wird bis zu 60x pro Sekunde aufgerufen.
 	// Wenn die Grafikkarte oder der Prozessor nicht mehr hinterherkommen,
@@ -62,57 +64,60 @@ public:
 	// Wird 60x pro Sekunde aufgerufen
 	void update() override
 	{
-		if (x_1 < 1860 && x_1<x_2-breite-5) {						//Bewegungslogik linker Char
-			if (input().down(Gosu::KB_D)) {
-				x_1 = x_1 + 5;
+		while (leben_li > 0 & leben_re > 0) {
+			if (x_1 < 1860 && x_1 < x_2 - breite - 5) {						//Bewegungslogik linker Char
+				if (input().down(Gosu::KB_D)) {
+					x_1 = x_1 + 5;
+				}
 			}
-		}
-		if (x_1 > 30) {
-			if (input().down(Gosu::KB_A)) {
-				x_1 = x_1 - 5;
+			if (x_1 > 30) {
+				if (input().down(Gosu::KB_A)) {
+					x_1 = x_1 - 5;
+				}
 			}
-		}
-		if (input().down(Gosu::KB_S)) {								//Ducklogik linker Char
-			y_1 = 810;
-			y_2_faust = 810;
-		}
-		else {
-			y_1 = 780;
-			y_1_faust = 800;
-		}
-		if (input().down(Gosu::KB_W) && ~input().down(Gosu::KB_S)) {								//Schlaglogik linker Char
-			x_1_faust = x_1+20;
-		}
-		else {
-			x_1_faust = x_1;
-		}
+			if (input().down(Gosu::KB_S)) {								//Ducklogik linker Char
+				y_1 = 810;
+				y_1_faust = 810;
+			}
+			else {
+				y_1 = 780;
+				y_1_faust = 800;
+			}
+			if (input().down(Gosu::KB_W) & ~input().down(Gosu::KB_S)) {								//Schlaglogik linker Char
+				x_1_faust = x_1 + 20;
+			}
+			else {
+				x_1_faust = x_1;
+			}
 
 
 
-		if (x_2 < 1860) {											//Bewegungslogik rechter Char
-			if (input().down(Gosu::KB_RIGHT)) {
-				x_2 = x_2 + 5;
+			if (x_2 < 1860) {											//Bewegungslogik rechter Char
+				if (input().down(Gosu::KB_RIGHT)) {
+					x_2 = x_2 + 5;
+				}
+			}
+			if (x_2 > 30 && x_2 > x_1 + breite + 5) {
+				if (input().down(Gosu::KB_LEFT)) {
+					x_2 = x_2 - 5;
+				}
+			}
+			if (input().down(Gosu::KB_DOWN)) {							//Ducklogik rechter Char
+				y_2 = 810;
+				y_2_faust = 810;
+			}
+			else {
+				y_2 = 780;
+				y_2_faust = 800;
+			}
+			if (input().down(Gosu::KB_UP)&~input().down(Gosu::KB_DOWN)) {								//Schlaglogik rechter Char
+				x_2_faust = x_2 - 20;
+			}
+			else {
+				x_2_faust = x_2;
 			}
 		}
-		if (x_2 > 30 && x_2>x_1+breite+5) {
-			if (input().down(Gosu::KB_LEFT)) {
-				x_2 = x_2 - 5;
-			}
-		}
-		if (input().down(Gosu::KB_DOWN)) {							//Ducklogik rechter Char
-			y_2 = 810;
-			y_2_faust = 810;
-		}
-		else {
-			y_2 = 780;
-			y_2_faust = 800;
-		}
-		if (input().down(Gosu::KB_UP)&&~input().down(Gosu::KB_DOWN)) {								//Schlaglogik linker Char
-			x_2_faust = x_2 -20;
-		}
-		else {
-			x_2_faust = x_2;
-		}
+
 	}
 };
 
