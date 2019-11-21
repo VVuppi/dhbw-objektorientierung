@@ -136,9 +136,7 @@ public:
 			leben_li = 3;
 			leben_re = 3;
 		}
-		if (leben_li <= 0 || leben_re <= 0) {
-			spielabschnitt = winner;
-		}
+
 
 
 		if (spielabschnitt == winner) {
@@ -165,8 +163,12 @@ public:
 				close();
 			}
 		};
+
 		if (spielabschnitt == game) {
 
+			if (leben_li <= 0 || leben_re <= 0) {
+				spielabschnitt = winner;
+			}
 
 			if (x_2_faust < (x_1 + breite)&~input().down(Gosu::KB_S)&& ~ ((x_1_faust + breite_faust) > x_2 & ~input().down(Gosu::KB_DOWN))) {				//Anfänge Hitlogik
 				leben_li--;
