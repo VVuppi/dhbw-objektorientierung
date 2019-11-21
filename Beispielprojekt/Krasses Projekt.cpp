@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "Vektor2d.h"
+using namespace std;
 
 // Simulationsgeschwindigkeit
 const double DT = 100.0;
@@ -21,6 +22,7 @@ public:
 	{
 		set_caption("Gosu Tutorial Game richtig GG");
 	}
+
 	int x_1=640;											//Startwert Fortbewegung linker Char
 	int x_1_faust = 640;
 	int x_2=1280;											//Startwert Fortbewegung rechter Char
@@ -35,13 +37,31 @@ public:
 	int y_2_faust = 810;
 	int leben_li = 3;
 	int leben_re = 3;
+	int herz_y = 50;
+	int herz_x = 50;
+	int herz_x_2 = 2 * herz_x;
+	int herz_x_3 = 3 * herz_x;
+	int herz_x_1_2 = 50;
+	int herz_x_2_2 = 2 * herz_x_1_2;
+	int herz_x_3_2 = 3 * herz_x_1_2;
+	int r;
+	int b;
+	int breite_play=500;
+	int hoehe_play=150;
+	int breite_end = 50;
+	int hoehe_end = 50;
+	int breite_maus=10;
+	int hoehe_maus=10;
+	int x_maus = 960;
+	int y_maus = 540;
 
 	enum kapitel {
 		menu,
 		game,
+		winner,
 	};
 
-	kapitel spielabschnitt = game;
+	kapitel spielabschnitt = menu;
 	
 	// wird bis zu 60x pro Sekunde aufgerufen.
 	// Wenn die Grafikkarte oder der Prozessor nicht mehr hinterherkommen,
@@ -49,8 +69,17 @@ public:
 	void draw() override
 	{
 		if (spielabschnitt == menu) {
-
+			Gosu::Graphics::draw_rect(
+				(1920 - breite_play) / 2, (1080 - (hoehe_play)) / 2, breite_play, hoehe_play, Gosu::Color::YELLOW, 0.0			//Play Button
+			);
+			Gosu::Graphics::draw_rect(
+				(1920 - 2*breite_end),   hoehe_end , breite_end, hoehe_end, Gosu::Color::RED, 0.0			//End Button
+			);
+			Gosu::Graphics::draw_rect(
+				x_maus, y_maus, breite_maus, hoehe_maus, Gosu::Color::GREEN, 0.0			//Cursor
+			);
 		};
+
 		if (spielabschnitt == game) {
 			Gosu::Graphics::draw_rect(
 				x_1, 810, breite, hoehe, Gosu::Color::RED, 0.0			//dummy linker Char
@@ -70,26 +99,127 @@ public:
 			Gosu::Graphics::draw_rect(
 				x_2_faust, y_2_faust, breite_faust, hoehe_faust, Gosu::Color::BLUE, 0.0			//Faust rechter Char
 			);
+			Gosu::Graphics::draw_rect(
+				herz_x, herz_y, 20, 20, Gosu::Color::RED, 0.0			//Herzen linker Char
+			);
+			Gosu::Graphics::draw_rect(
+				herz_x_2, herz_y, 20, 20, Gosu::Color::RED, 0.0
+			);
+			Gosu::Graphics::draw_rect(
+				herz_x_3, herz_y, 20, 20, Gosu::Color::RED, 0.0
+			);
+			Gosu::Graphics::draw_rect(
+				herz_x_1_2 + 1710, herz_y, 20, 20, Gosu::Color::RED, 0.0			//Herzen rechter Char
+			);
+			Gosu::Graphics::draw_rect(
+				herz_x_2_2 + 1710, herz_y, 20, 20, Gosu::Color::RED, 0.0
+			);
+			Gosu::Graphics::draw_rect(
+				herz_x_3_2 + 1710, herz_y, 20, 20, Gosu::Color::RED, 0.0
+			);
 		};
+		if (spielabschnitt == winner) {
+			Gosu::Graphics::draw_rect(
+				(1920-breite)/2, (1080-(2*hoehe))/2, breite, 2*hoehe, Gosu::Color::Color(r,0,b), 0.0
+			);
+			Gosu::Graphics::draw_rect(
+				(1920 - breite) / 2, ((1080 - (2 * hoehe))/2)-(hoehe/3), breite, hoehe/3, Gosu::Color::YELLOW, 0.0
+			);
+		}
 	}
 	
 	// Wird 60x pro Sekunde aufgerufen
 	void update() override
 	{
-		if (input().down(Gosu::KB_ESCAPE)||leben_li<=0||leben_re<=0) {
+		if (input().down(Gosu::KB_ESCAPE)) {
 			spielabschnitt = menu;
+			leben_li = 3;
+			leben_re = 3;
+		}
+		if (leben_li <= 0 || leben_re <= 0) {
+			spielabschnitt = winner;
+		}
+
+
+		if (spielabschnitt == winner) {
+			if (leben_li <= 0) {
+				r = 0;
+				b = 255;
+			}
+			if (leben_re <= 0) {
+				r = 255;
+				b = 0;
+			}
+			if (input().down(Gosu::MS_LEFT)) {
+				spielabschnitt = menu;
+			}
 		}
 
 		if (spielabschnitt == menu) {
-
+			x_maus = input().mouse_x();
+			y_maus = input().mouse_y();
+			if (input().down(Gosu::MS_LEFT) && (((1920 - breite_play) / 2) < x_maus)&&(x_maus < ((1920 + breite_play) / 2)) && (((1080 - hoehe_play) / 2) < y_maus)&&(y_maus <( (1080 + hoehe_play) / 2))) {
+				spielabschnitt = game;
+			}
+			if (input().down(Gosu::MS_LEFT) && ((1920 - 2*breite_end< x_maus) && (x_maus < (1920 - breite_end) ) && (( hoehe_end)  < y_maus) && (y_maus <( 2*hoehe_end) ))) {
+				close();
+			}
 		};
 		if (spielabschnitt == game) {
-			if (x_2_faust < (x_1 + breite)&~input().down(Gosu::KB_S)) {
+
+
+			if (x_2_faust < (x_1 + breite)&~input().down(Gosu::KB_S)&& ~ ((x_1_faust + breite_faust) > x_2 & ~input().down(Gosu::KB_DOWN))) {				//Anfänge Hitlogik
 				leben_li--;
+				x_1 = 640;											
+				x_1_faust = 640;
+				x_2 = 1280;											
+				x_2_faust = 1280;
+
 			}
-			if ((x_1_faust+breite_faust) > x_2 & ~input().down(Gosu::KB_DOWN)) {
+
+			if ((x_1_faust + breite_faust) > x_2 & ~input().down(Gosu::KB_DOWN)&& ~ (x_2_faust < (x_1 + breite)&~input().down(Gosu::KB_S))) {
 				leben_re--;
+				x_1 = 640;
+				x_1_faust = 640;
+				x_2 = 1280;
+				x_2_faust = 1280;
 			}
+
+
+			if (leben_li == 3) {
+				herz_x = 50;
+				herz_x_2 = herz_x * 2;
+				herz_x_3 = herz_x * 3;
+			};
+			if (leben_li == 2) {
+				herz_x = 50;
+				herz_x_2 = herz_x * 2;
+				herz_x_3 = herz_x * 2;
+			};
+			if (leben_li == 1) {
+				herz_x = 50;
+				herz_x_2 = herz_x ;
+				herz_x_3 = herz_x ;
+			};
+
+			if (leben_re == 3) {
+				herz_x_3_2 = 150;
+				herz_x_2_2 = 100;
+				herz_x_1_2 = 50;
+			};
+			if (leben_re == 2) {
+				herz_x_3_2 = 150;
+				herz_x_1_2 = 100;
+				herz_x_2_2 = 100;
+			
+			};
+			if (leben_re == 1) {
+				herz_x_3_2 = 150;
+				herz_x_1_2 = 150;
+				herz_x_2_2 = 150;
+			
+			};
+
 
 
 
