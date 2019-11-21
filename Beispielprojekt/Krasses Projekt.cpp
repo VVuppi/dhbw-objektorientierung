@@ -35,36 +35,64 @@ public:
 	int y_2_faust = 810;
 	int leben_li = 3;
 	int leben_re = 3;
+
+	enum kapitel {
+		menu,
+		game,
+	};
+
+	kapitel spielabschnitt = game;
 	
 	// wird bis zu 60x pro Sekunde aufgerufen.
 	// Wenn die Grafikkarte oder der Prozessor nicht mehr hinterherkommen,
 	// dann werden `draw` Aufrufe ausgelassen und die Framerate sinkt
 	void draw() override
 	{
-		Gosu::Graphics::draw_rect(
-			x_1, 810, breite, hoehe, Gosu::Color::RED,0.0			//dummy linker Char
-		);
-		Gosu::Graphics::draw_rect(
-			x_1, y_1, breite, hoehe, Gosu::Color::RED, 0.0			//dummy linker Char
-		);
-		Gosu::Graphics::draw_rect(
-			x_1_faust+breite-breite_faust, y_1_faust, breite_faust, hoehe_faust, Gosu::Color::RED, 0.0			//Faust linker Char
-		);
-		Gosu::Graphics::draw_rect(
-			x_2, 810, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
-		);
-		Gosu::Graphics::draw_rect(
-			x_2, y_2, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
-		);
-		Gosu::Graphics::draw_rect(
-			x_2_faust, y_2_faust, breite_faust, hoehe_faust, Gosu::Color::BLUE, 0.0			//Faust rechter Char
-		);
+		if (spielabschnitt == menu) {
+
+		};
+		if (spielabschnitt == game) {
+			Gosu::Graphics::draw_rect(
+				x_1, 810, breite, hoehe, Gosu::Color::RED, 0.0			//dummy linker Char
+			);
+			Gosu::Graphics::draw_rect(
+				x_1, y_1, breite, hoehe, Gosu::Color::RED, 0.0			//dummy linker Char
+			);
+			Gosu::Graphics::draw_rect(
+				x_1_faust + breite - breite_faust, y_1_faust, breite_faust, hoehe_faust, Gosu::Color::RED, 0.0			//Faust linker Char
+			);
+			Gosu::Graphics::draw_rect(
+				x_2, 810, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
+			);
+			Gosu::Graphics::draw_rect(
+				x_2, y_2, breite, hoehe, Gosu::Color::BLUE, 0.0			//dummy rechter Char
+			);
+			Gosu::Graphics::draw_rect(
+				x_2_faust, y_2_faust, breite_faust, hoehe_faust, Gosu::Color::BLUE, 0.0			//Faust rechter Char
+			);
+		};
 	}
 	
 	// Wird 60x pro Sekunde aufgerufen
 	void update() override
 	{
-		while (leben_li > 0 & leben_re > 0) {
+		if (input().down(Gosu::KB_ESCAPE)||leben_li<=0||leben_re<=0) {
+			spielabschnitt = menu;
+		}
+
+		if (spielabschnitt == menu) {
+
+		};
+		if (spielabschnitt == game) {
+			if (x_2_faust < (x_1 + breite)&~input().down(Gosu::KB_S)) {
+				leben_li--;
+			}
+			if ((x_1_faust+breite_faust) > x_2 & ~input().down(Gosu::KB_DOWN)) {
+				leben_re--;
+			}
+
+
+
 			if (x_1 < 1860 && x_1 < x_2 - breite - 5) {						//Bewegungslogik linker Char
 				if (input().down(Gosu::KB_D)) {
 					x_1 = x_1 + 5;
@@ -84,8 +112,11 @@ public:
 				y_1_faust = 800;
 			}
 			if (input().down(Gosu::KB_W) & ~input().down(Gosu::KB_S)) {								//Schlaglogik linker Char
-				x_1_faust = x_1 + 20;
+				
+					x_1_faust = x_1 + 20;
+				
 			}
+				
 			else {
 				x_1_faust = x_1;
 			}
@@ -116,7 +147,8 @@ public:
 			else {
 				x_2_faust = x_2;
 			}
-		}
+		};
+
 
 	}
 };
