@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "time.h"
-#include "stdio.h"
+
 
 #include <Gosu/Gosu.hpp>
 #include <Gosu/AutoLink.hpp>
@@ -18,9 +17,16 @@ const double DT = 100.0;
 class GameWindow : public Gosu::Window
 {
 public:
-	Gosu::Image bild;
+	Gosu::Image play;
+	Gosu::Sample sample1;
+	Gosu::Sample sample2;
+	Gosu::Sample sample3;
 	GameWindow()
-		: Window(1920, 1080)
+		: Window(1920, 1080,1)
+		,play("Play.png")
+		,sample1("Male Grunts 1.wav")
+		,sample2("Male Grunts 2.wav")
+		,sample3("Winner.wav")
 	{
 		set_caption("Gosu Tutorial Game richtig GG");
 	}
@@ -63,6 +69,9 @@ public:
 	int i = 0;
 	int j = 0;
 	int maussafe = 0;
+	int wincnt = 0;
+
+	
 
 	enum kapitel {
 		menu,
@@ -70,10 +79,7 @@ public:
 		winner,
 	};
 
-	void delay(int milliseconds) {
-		clock_t start_time = clock();
-		while (clock() < start_time + milliseconds);
-	}
+
 
 	kapitel spielabschnitt = menu;
 	
@@ -92,6 +98,7 @@ public:
 			Gosu::Graphics::draw_rect(
 				x_maus, y_maus, breite_maus, hoehe_maus, Gosu::Color::BLUE, 0.0			//Cursor
 			);
+			play.draw((1920 - 212) / 2, (1080 - (110)) / 2,0.0,1,1);
 		};
 
 		if (spielabschnitt == game) {
@@ -154,6 +161,12 @@ public:
 
 
 		if (spielabschnitt == winner) {
+			if (wincnt == 0) {
+				sample3.play(
+					0.8, 1, false
+				);
+				wincnt = 1;
+			}
 			if (leben_li <= 0) {
 				r = 0;
 				b = 255;
@@ -170,6 +183,7 @@ public:
 		}
 
 		if (spielabschnitt == menu) {
+			wincnt = 0;
 			leben_li = 3;
 			leben_re = 3;
 			x_maus = input().mouse_x();
@@ -202,6 +216,9 @@ public:
 			}
 
 			if ((x_2_faust-j) < (x_1 + breite)&~input().down(Gosu::KB_S)&& ~ ((x_1_faust + breite_faust) > x_2 & ~input().down(Gosu::KB_DOWN))) {				//Anfänge Hitlogik
+				sample1.play(
+					1, 1, false
+				);
 				leben_li--;
 				x_1 = 640;											
 				x_1_faust = 640;
@@ -210,6 +227,9 @@ public:
 			}
 
 			if ((x_1_faust + breite_faust+i) > x_2 & ~input().down(Gosu::KB_DOWN)&& ~ (x_2_faust < (x_1 + breite)&~input().down(Gosu::KB_S))) {
+				sample2.play(
+					1, 1, false
+				);
 				leben_re--;
 				x_1 = 640;
 				x_1_faust = 640;
@@ -279,7 +299,7 @@ public:
 					steiflw = 1;							//Schlaglogik linker Char
 					if (x_1_faust+i < x_1 + 21) {
 						i = i + 3;
-						if (x_1 < 1860 && x_1 < x_2 - breite - 5) {						//Bewegungslogik linker Char
+						if (x_1 < 1860 && x_1 < x_2 - breite ) {						//Bewegungslogik linker Char
 							if (input().down(Gosu::KB_D)) {
 								i = i + 5;
 							}
@@ -338,7 +358,7 @@ public:
 								j = j - 5;
 							}
 						}
-						if (x_2 > 30 && x_2 > x_1 + breite + 5) {
+						if (x_2 > 30 && x_2 > x_1 + breite ) {
 							if (input().down(Gosu::KB_LEFT)) {
 								j = j + 5;
 							}
