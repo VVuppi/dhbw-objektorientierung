@@ -28,7 +28,7 @@ public:
 		,sample2("Male Grunts 2.wav")
 		,sample3("Winner.wav")
 	{
-		set_caption("Gosu Tutorial Game richtig GG");
+		set_caption("Blockfight");
 	}
 
 	int x_1=640;											//Startwert Fortbewegung linker Char
